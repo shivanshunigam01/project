@@ -41,15 +41,12 @@ const Navbar = () => {
             <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
               <Link to="/" className="flex items-center">
                 <img
-                  src="/favicon.ico"
-                  alt="Elevate360 Logo"
+                  src="/public/favicon.ico" // ✅ Use a proper format like PNG or SVG
+                  // alt="Elevate360 Logo"
                   className="h-8 w-auto sm:h-10 md:h-11 lg:h-12 transition-transform duration-300 hover:scale-105 drop-shadow-xl"
                 />
               </Link>
             </div>
-            <span className="text-xl font-bold text-gray-800">
-              Elevate360 Digital
-            </span>
           </div>
 
           {/* Desktop Menu */}
