@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
+import logo from "../public/favicon.ico";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -38,15 +39,12 @@ const Navbar = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <Link to="/" className="flex items-center">
-                <img
-                  src="/public/favicon.ico" // ✅ Use a proper format like PNG or SVG
-                  // alt="Elevate360 Logo"
-                  className="h-8 w-auto sm:h-10 md:h-11 lg:h-12 transition-transform duration-300 hover:scale-105 drop-shadow-xl"
-                />
-              </Link>
-            </div>
+            <Link to="/" className="flex items-center">
+              <img
+                src={logo}
+                className="h-8 w-auto sm:h-10 md:h-11 lg:h-12 transition-transform duration-300 hover:scale-105 drop-shadow-xl"
+              />
+            </Link>
           </div>
 
           {/* Desktop Menu */}
