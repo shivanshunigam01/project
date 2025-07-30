@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "../public/favicon.ico";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -13,11 +14,25 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const navigate = useNavigate();
+
+  const handleClick = (href: string) => {
+    if (href.startsWith("#")) {
+      const sectionId = href.slice(1);
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth" });
+      }
+    } else {
+      navigate(href);
+    }
+  };
+
   const menuItems = [
-    { name: "Home", href: "#home" },
+    { name: "Home", href: "/" },
     { name: "Services", href: "#services" },
-    { name: "Industries", href: "#industries" },
-    { name: "Blog", href: "#blog" },
+    { name: "Industries", href: "/industries" },
+    { name: "Blog", href: "/blog" },
     { name: "Contact Us", href: "#contact" },
   ];
 
@@ -49,11 +64,11 @@ const Navbar = () => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
-            {menuItems.map((item) => (
+            {menuItems.map((item, index) => (
               <button
-                key={item.name}
-                onClick={() => scrollToSection(item.href)}
-                className="text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200"
+                key={index}
+                onClick={() => handleClick(item.href)}
+                className="nav-link"
               >
                 {item.name}
               </button>
