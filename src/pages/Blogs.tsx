@@ -441,11 +441,11 @@ const BlogsPage = () => {
               <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
                 Marketing Insights & Blog
               </h1>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-8">
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                 Stay updated with the latest marketing trends, strategies, and
                 industry insights from our team of experts.
               </p>
-              <div className="flex justify-center space-x-8 text-sm text-gray-500 mb-8">
+              <div className="mt-8 flex justify-center space-x-8 text-sm text-gray-500">
                 <div className="flex items-center">
                   <Users className="w-4 h-4 mr-2" />
                   <span>50+ Marketing Experts</span>
