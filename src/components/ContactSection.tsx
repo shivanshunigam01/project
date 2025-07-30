@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Send, Mail, Phone, MapPin, CheckCircle } from "lucide-react";
+import { Send, Mail, Phone, MapPin, CheckCircle, Home } from "lucide-react";
 import SVGSeparator from "./SVGSeparator";
 
 const ContactSection = () => {
@@ -9,6 +9,7 @@ const ContactSection = () => {
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [isOtpVerified, setIsOtpVerified] = useState(false);
   const [enteredOtp, setEnteredOtp] = useState("");
+  const [isContactPage, setIsContactPage] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const [formData, setFormData] = useState({
@@ -20,6 +21,11 @@ const ContactSection = () => {
     industry: "",
     message: "",
   });
+
+  useEffect(() => {
+    // Check if current URL is /contact
+    setIsContactPage(window.location.pathname === "/contact");
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -85,6 +91,10 @@ const ContactSection = () => {
     }, 3000);
   };
 
+  const handleBackToHome = () => {
+    window.location.href = "/";
+  };
+
   const contactInfo = [
     {
       icon: <Mail className="w-6 h-6" />,
@@ -128,6 +138,19 @@ const ContactSection = () => {
                 : "opacity-0 translate-y-10"
             }`}
           >
+            {/* Back to Homepage Button - Only shown on /contact page */}
+            {isContactPage && (
+              <div className="mb-8">
+                <button
+                  onClick={handleBackToHome}
+                  className="inline-flex items-center space-x-2 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white px-6 py-3 rounded-lg transition-all duration-200 hover:scale-105"
+                >
+                  <Home className="w-5 h-5" />
+                  <span>Back to Homepage</span>
+                </button>
+              </div>
+            )}
+
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
                 Request a Free Proposal

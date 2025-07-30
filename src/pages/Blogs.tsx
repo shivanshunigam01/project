@@ -16,7 +16,7 @@ import {
   ArrowRight,
   Search,
 } from "lucide-react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 const blogData = [
   {
@@ -431,14 +431,7 @@ const BlogsPage = () => {
               Back to Home
             </button>
           </div>
-          <div
-            ref={sectionRef}
-            className={`transition-all duration-1000 ${
-              isVisible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-10"
-            }`}
-          >
+          <div ref={sectionRef} className="opacity-100 translate-y-0">
             <div className="text-center mb-8 md:mb-16">
               <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4 md:mb-6">
                 Marketing Insights & Blog
@@ -768,9 +761,11 @@ const BlogsPage = () => {
                   Let our experts help you apply these insights to grow your
                   business.
                 </p>
-                <button className="bg-white text-blue-600 px-4 md:px-6 py-2 rounded-lg text-sm md:text-base font-medium hover:bg-gray-100 transition-colors">
-                  Get Expert Consultation
-                </button>
+                <Link to={"/contact"}>
+                  <button className="bg-white text-blue-600 px-4 md:px-6 py-2 rounded-lg text-sm md:text-base font-medium hover:bg-gray-100 transition-colors">
+                    Get Expert Consultation
+                  </button>
+                </Link>
               </div>
             </div>
           </div>
