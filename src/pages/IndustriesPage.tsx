@@ -298,6 +298,7 @@ const IndustriesPage = () => {
   const sectionRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
   const [selectedIndustry, setSelectedIndustry] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -320,17 +321,16 @@ const IndustriesPage = () => {
   const closeModal = () => {
     setSelectedIndustry(null);
   };
-  const navigate = useNavigate();
 
   return (
     <>
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
+      <section className="pt-24 pb-12 md:py-20 bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
         <div className="container mx-auto px-4">
           {/* 🔙 Back to Home Button */}
-          <div className="mb-6">
+          <div className="mb-6 md:mb-8">
             <button
               onClick={() => navigate("/")}
-              className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-300"
+              className="bg-blue-600 text-white px-4 py-2 md:px-6 md:py-3 rounded-lg hover:bg-blue-700 transition-colors duration-300 text-sm md:text-base"
             >
               Back to Home
             </button>
@@ -343,17 +343,17 @@ const IndustriesPage = () => {
                 : "opacity-0 translate-y-10"
             }`}
           >
-            <div className="text-center mb-16">
-              <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
+            <div className="text-center mb-8 md:mb-16">
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4 md:mb-6">
                 Industries We Serve
               </h1>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-base md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
                 At Elevate360, we specialize in providing tailored digital
                 solutions across diverse industries. Our expertise spans
                 multiple sectors, delivering measurable results and driving
                 growth for businesses of all sizes.
               </p>
-              <div className="mt-8 flex justify-center space-x-8 text-sm text-gray-500">
+              <div className="mt-6 md:mt-8 flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-8 text-sm text-gray-500">
                 <div className="flex items-center">
                   <Users className="w-4 h-4 mr-2" />
                   <span>1000+ Clients Served</span>
@@ -365,22 +365,22 @@ const IndustriesPage = () => {
               </div>
             </div>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
               {industryData.map((industry, index) => (
                 <div
                   key={index}
-                  className="bg-white shadow-lg rounded-2xl p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 flex flex-col items-start group border border-gray-100"
+                  className="bg-white shadow-lg rounded-2xl p-4 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 flex flex-col items-start group border border-gray-100"
                 >
-                  <div className="mb-4 p-3 bg-gray-50 rounded-xl group-hover:bg-blue-50 transition-colors duration-300">
+                  <div className="mb-3 md:mb-4 p-2 md:p-3 bg-gray-50 rounded-xl group-hover:bg-blue-50 transition-colors duration-300">
                     {industry.icon}
                   </div>
-                  <h3 className="text-xl font-bold text-gray-800 mb-3">
+                  <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-2 md:mb-3">
                     {industry.title}
                   </h3>
-                  <p className="text-gray-600 flex-grow mb-4 leading-relaxed">
+                  <p className="text-sm md:text-base text-gray-600 flex-grow mb-3 md:mb-4 leading-relaxed">
                     {industry.description}
                   </p>
-                  <div className="w-full mb-4">
+                  <div className="w-full mb-3 md:mb-4">
                     <div className="flex justify-between text-sm text-gray-500 mb-2">
                       <span>Clients: {industry.stats.clients}</span>
                       <span>Growth: {industry.stats.growth}</span>
@@ -391,7 +391,7 @@ const IndustriesPage = () => {
                   </div>
                   <button
                     onClick={() => openModal(industry)}
-                    className="w-full mt-auto inline-flex justify-center items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300 group-hover:shadow-lg"
+                    className="w-full mt-auto inline-flex justify-center items-center px-3 md:px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm md:text-base font-medium rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300 group-hover:shadow-lg"
                   >
                     Learn More <ChevronRight className="ml-2 w-4 h-4" />
                   </button>
@@ -405,13 +405,13 @@ const IndustriesPage = () => {
       {/* Modal */}
       {selectedIndustry && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b p-6 flex justify-between items-center">
+          <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto mx-4">
+            <div className="sticky top-0 bg-white border-b p-4 md:p-6 flex justify-between items-center">
               <div className="flex items-center">
-                <div className="p-2 bg-gray-50 rounded-lg mr-4">
+                <div className="p-1 md:p-2 bg-gray-50 rounded-lg mr-2 md:mr-4">
                   {selectedIndustry.icon}
                 </div>
-                <h2 className="text-3xl font-bold text-gray-800">
+                <h2 className="text-xl md:text-3xl font-bold text-gray-800">
                   {selectedIndustry.title}
                 </h2>
               </div>
@@ -423,92 +423,92 @@ const IndustriesPage = () => {
               </button>
             </div>
 
-            <div className="p-6">
-              <p className="text-lg text-gray-600 mb-8">
+            <div className="p-4 md:p-6">
+              <p className="text-base md:text-lg text-gray-600 mb-6 md:mb-8">
                 {selectedIndustry.description}
               </p>
 
               {/* Stats */}
-              <div className="grid grid-cols-3 gap-6 mb-8 p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl">
+              <div className="grid grid-cols-3 gap-3 md:gap-6 mb-6 md:mb-8 p-4 md:p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">
+                  <div className="text-lg md:text-2xl font-bold text-blue-600">
                     {selectedIndustry.stats.clients}
                   </div>
-                  <div className="text-sm text-gray-600">Happy Clients</div>
+                  <div className="text-xs md:text-sm text-gray-600">Happy Clients</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-600">
+                  <div className="text-lg md:text-2xl font-bold text-purple-600">
                     {selectedIndustry.stats.growth}
                   </div>
-                  <div className="text-sm text-gray-600">Average Growth</div>
+                  <div className="text-xs md:text-sm text-gray-600">Average Growth</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-green-600">
+                  <div className="text-lg md:text-2xl font-bold text-green-600">
                     {selectedIndustry.stats.projects}
                   </div>
-                  <div className="text-sm text-gray-600">
+                  <div className="text-xs md:text-sm text-gray-600">
                     Projects Completed
                   </div>
                 </div>
               </div>
 
               {/* Services */}
-              <div className="mb-8">
-                <h3 className="text-xl font-bold text-gray-800 mb-4">
+              <div className="mb-6 md:mb-8">
+                <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3 md:mb-4">
                   Our Services
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 gap-2 md:gap-3">
                   {selectedIndustry.services.map((service, index) => (
                     <div
                       key={index}
-                      className="flex items-center p-3 bg-gray-50 rounded-lg"
+                      className="flex items-center p-2 md:p-3 bg-gray-50 rounded-lg"
                     >
                       <CheckCircle className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
-                      <span className="text-gray-700">{service}</span>
+                      <span className="text-sm md:text-base text-gray-700">{service}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* Case Study */}
-              <div className="mb-8">
-                <h3 className="text-xl font-bold text-gray-800 mb-4">
+              <div className="mb-6 md:mb-8">
+                <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3 md:mb-4">
                   Success Story
                 </h3>
-                <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
-                  <p className="text-gray-700 italic">
+                <div className="bg-green-50 border-l-4 border-green-500 p-3 md:p-4 rounded-r-lg">
+                  <p className="text-sm md:text-base text-gray-700 italic">
                     "{selectedIndustry.caseStudy}"
                   </p>
                 </div>
               </div>
 
               {/* Challenges */}
-              <div className="mb-8">
-                <h3 className="text-xl font-bold text-gray-800 mb-4">
+              <div className="mb-6 md:mb-8">
+                <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3 md:mb-4">
                   Industry Challenges We Address
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 gap-2 md:gap-3">
                   {selectedIndustry.challenges.map((challenge, index) => (
                     <div
                       key={index}
-                      className="flex items-center p-3 bg-red-50 border border-red-200 rounded-lg"
+                      className="flex items-center p-2 md:p-3 bg-red-50 border border-red-200 rounded-lg"
                     >
                       <div className="w-2 h-2 bg-red-500 rounded-full mr-3 flex-shrink-0"></div>
-                      <span className="text-gray-700">{challenge}</span>
+                      <span className="text-sm md:text-base text-gray-700">{challenge}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* CTA */}
-              <div className="text-center p-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl text-white">
-                <h3 className="text-xl font-bold mb-2">
+              <div className="text-center p-4 md:p-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl text-white">
+                <h3 className="text-lg md:text-xl font-bold mb-2">
                   Ready to Transform Your {selectedIndustry.title} Business?
                 </h3>
-                <p className="mb-4">
+                <p className="text-sm md:text-base mb-4">
                   Let's discuss how we can help you achieve similar results.
                 </p>
-                <button className="bg-white text-blue-600 px-6 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors">
+                <button className="bg-white text-blue-600 px-4 md:px-6 py-2 rounded-lg text-sm md:text-base font-medium hover:bg-gray-100 transition-colors">
                   Get Started Today
                 </button>
               </div>
