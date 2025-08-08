@@ -12,6 +12,7 @@ import ServicePage from "./pages/ServicePage";
 import OurWorkDetailPage from "./pages/OurWorkDetailPage";
 import IndustriesPage from "./pages/IndustriesPage";
 import BlogsPage from "./pages/Blogs";
+import Chatbot from "./components/Chatbot";
 
 function App() {
   return (
@@ -30,6 +31,8 @@ function App() {
               <TestimonialsSection />
               <ContactSection />
               <BackToTop />
+              {/* Chatbot Component - This will appear on every page */}
+              <Chatbot />
             </>
           }
         />
