@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Send, Mail, Phone, MapPin, CheckCircle, Home } from "lucide-react";
 import SVGSeparator from "./SVGSeparator";
+import toast from "react-hot-toast";
 
 const ContactSection = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -9,6 +10,7 @@ const ContactSection = () => {
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [isOtpVerified, setIsOtpVerified] = useState(false);
   const [enteredOtp, setEnteredOtp] = useState("");
+  const [verifiedPhone, setVerifiedPhone] = useState(""); // ✅ store verified phone number
   const [isContactPage, setIsContactPage] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
@@ -20,75 +22,134 @@ const ContactSection = () => {
     address: "",
     industry: "",
     message: "",
+    budget: "", // optional but added
   });
 
   useEffect(() => {
-    // Check if current URL is /contact
     setIsContactPage(window.location.pathname === "/contact");
   }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
+        if (entry.isIntersecting) setIsVisible(true);
       },
       { threshold: 0.2 }
     );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
+    if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
 
   const handleInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const sendOtp = () => {
-    setIsOtpSent(true);
-    // Removed alert - now just sets the OTP sent state for demo
-  };
+  const sendOtp = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/otp/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+        }),
+      });
 
-  const verifyOtp = () => {
-    // Accept any OTP for demo purposes
-    if (enteredOtp.trim() !== "") {
-      setIsOtpVerified(true);
-      setStep(2);
-    } else {
-      alert("Please enter an OTP.");
+      const data = await response.json();
+      if (response.ok) {
+        setIsOtpSent(true);
+        toast.success("OTP sent successfully");
+      } else {
+        toast.error(data.message || "Failed to send OTP");
+      }
+    } catch (error) {
+      toast.error("Something went wrong while sending OTP.");
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitted(true);
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setFormData({
-        name: "",
-        phone: "",
-        email: "",
-        company: "",
-        address: "",
-        industry: "",
-        message: "",
+  const verifyOtp = async () => {
+    if (!enteredOtp.trim()) {
+      toast.error("Please enter the OTP");
+      return;
+    }
+    try {
+      const response = await fetch("http://localhost:5000/api/otp/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          phone: formData.phone,
+          otp: enteredOtp,
+        }),
       });
-      setStep(1);
-      setIsOtpSent(false);
-      setIsOtpVerified(false);
-      setEnteredOtp("");
-    }, 3000);
+
+      const data = await response.json();
+      if (response.ok && data.message === "OTP verified successfully") {
+        toast.success("OTP Verified Successfully 🎉");
+        setVerifiedPhone(formData.phone); // ✅ save verified phone
+        setTimeout(() => {
+          setIsOtpVerified(true);
+          setStep(2);
+        }, 800);
+      } else {
+        toast.error(data.message || "Invalid OTP");
+      }
+    } catch (error) {
+      toast.error("Something went wrong. Try again.");
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!isOtpVerified || !verifiedPhone) {
+      toast.error("Please verify your phone number before submitting.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5000/api/contact/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: verifiedPhone,
+          message: formData.message,
+          budget: Number(formData.budget) || 0, // optional
+          industry:formData.industry
+        }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        toast.success("Proposal request submitted successfully 🎯");
+        setIsSubmitted(true);
+        setTimeout(() => {
+          setIsSubmitted(false);
+          setFormData({
+            name: "",
+            phone: "",
+            email: "",
+            company: "",
+            address: "",
+            industry: "",
+            message: "",
+            budget: "",
+          });
+          setStep(1);
+          setIsOtpSent(false);
+          setIsOtpVerified(false);
+          setEnteredOtp("");
+          setVerifiedPhone("");
+        }, 3000);
+      } else {
+        toast.error(data.message || "Failed to submit proposal");
+      }
+    } catch (error) {
+      toast.error("Something went wrong while submitting.");
+    }
   };
 
   const handleBackToHome = () => {

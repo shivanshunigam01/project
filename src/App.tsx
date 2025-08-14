@@ -13,10 +13,12 @@ import OurWorkDetailPage from "./pages/OurWorkDetailPage";
 import IndustriesPage from "./pages/IndustriesPage";
 import BlogsPage from "./pages/Blogs";
 import Chatbot from "./components/Chatbot";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
     <div className="min-h-screen font-['Poppins',sans-serif]">
+      <Toaster position="top-right" reverseOrder={false} />
       <Routes>
         {/* Home Route */}
         <Route
