@@ -41,7 +41,9 @@ const ContactSection = () => {
   }, []);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -87,11 +89,15 @@ const ContactSection = () => {
       const data = await response.json();
       if (response.ok && data.message === "OTP verified successfully") {
         toast.success("OTP Verified Successfully 🎉");
-        setVerifiedPhone(formData.phone); // ✅ save verified phone
-        setTimeout(() => {
-          setIsOtpVerified(true);
-          setStep(2);
-        }, 800);
+
+        // ✅ store phone directly in formData
+        setFormData((prev) => ({
+          ...prev,
+          phone: prev.phone, // keep same phone but now considered verified
+        }));
+
+        setIsOtpVerified(true);
+        setStep(2);
       } else {
         toast.error(data.message || "Invalid OTP");
       }
@@ -103,8 +109,9 @@ const ContactSection = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!isOtpVerified || !verifiedPhone) {
-      toast.error("Please verify your phone number before submitting.");
+    // ✅ Only block submission in step 1
+    if (step === 1 && (!isOtpVerified || !formData.phone)) {
+      toast.error("Please verify your phone number before proceeding.");
       return;
     }
 
@@ -115,10 +122,12 @@ const ContactSection = () => {
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
-          phone: verifiedPhone,
+          phone: formData.phone,
           message: formData.message,
-          budget: Number(formData.budget) || 0, // optional
-          industry:formData.industry
+          budget: Number(formData.budget) || 0,
+          industry: formData.industry,
+          company: formData.company,
+          address: formData.address,
         }),
       });
 
@@ -142,7 +151,6 @@ const ContactSection = () => {
           setIsOtpSent(false);
           setIsOtpVerified(false);
           setEnteredOtp("");
-          setVerifiedPhone("");
         }, 3000);
       } else {
         toast.error(data.message || "Failed to submit proposal");
