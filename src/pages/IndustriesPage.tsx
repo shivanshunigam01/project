@@ -341,7 +341,7 @@ const IndustriesPage = () => {
                 Industries We Serve
               </h1>
               <p className="text-base md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
-                At Elevate360, we specialize in providing tailored digital
+                At Zentroverse, we specialize in providing tailored digital
                 solutions across diverse industries. Our expertise spans
                 multiple sectors, delivering measurable results and driving
                 growth for businesses of all sizes.

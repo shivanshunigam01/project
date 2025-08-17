@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 const HeroSection = () => {
   const heroSlides = [
     {
-      title: "Grow Your Business with Elevate360",
+      title: "Grow Your Business with Zentroverse",
       subtitle:
         "Transform your digital presence with our comprehensive marketing solutions",
       description:

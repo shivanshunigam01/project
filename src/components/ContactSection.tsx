@@ -168,8 +168,8 @@ const ContactSection = () => {
     {
       icon: <Mail className="w-6 h-6" />,
       title: "Email Us",
-      content: "hello@elevate360digital.com",
-      link: "mailto:hello@elevate360digital.com",
+      content: "hello@Zentroverse.com",
+      link: "mailto:hello@Zentroverse.com",
     },
     {
       icon: <Phone className="w-6 h-6" />,
@@ -493,7 +493,7 @@ const ContactSection = () => {
 
                 <div className="bg-white/5 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-white/10">
                   <h3 className="text-2xl font-bold text-white mb-6">
-                    Why Choose Elevate360?
+                    Why Choose Zentroverse?
                   </h3>
                   <div className="space-y-4">
                     <div className="flex items-center space-x-3">

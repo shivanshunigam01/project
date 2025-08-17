@@ -22,7 +22,7 @@ const Chatbot: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
-      text: "Hello! 👋 Welcome to Elevate360 Digital! I'm here to help you grow your business with our comprehensive digital marketing solutions.",
+      text: "Hello! 👋 Welcome to Zentroverse! I'm here to help you grow your business with our comprehensive digital marketing solutions.",
       isUser: false,
       timestamp: new Date(),
     },
@@ -35,10 +35,10 @@ const Chatbot: React.FC = () => {
 
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
-  // Comprehensive FAQ Database based on 360 Digital services
+  // Comprehensive FAQ Database based on  Digital services
   const faqs: FAQ[] = [
     {
-      question: "What services does Elevate360 offer?",
+      question: "What services does Zentroverse offer?",
       answer:
         "We offer comprehensive digital marketing services including:\n\n🔍 **SEO & Search Engine Optimization** - Boost your rankings\n📱 **Social Media Marketing** - Engage your audience\n💰 **PPC & Google Ads** - Drive instant traffic\n🎨 **Website Design & Development** - Create stunning websites\n📧 **Email Marketing** - Nurture leads effectively\n📊 **Analytics & Reporting** - Track your success\n✍️ **Content Marketing** - Tell your story\n🎯 **Brand Strategy** - Build powerful brand identity",
       followUp: [
@@ -49,7 +49,7 @@ const Chatbot: React.FC = () => {
       keywords: ["services", "what do you do", "offerings", "help", "provide"],
     },
     {
-      question: "How can Elevate360 grow my business?",
+      question: "How can Zentroverse grow my business?",
       answer:
         "We transform your digital presence through:\n\n📈 **Increased Online Visibility** - Get found by more customers\n🎯 **Targeted Marketing** - Reach the right audience\n💡 **Data-Driven Strategies** - Make informed decisions\n🚀 **Lead Generation** - Convert visitors to customers\n📊 **Performance Tracking** - Measure real results\n🔄 **Continuous Optimization** - Always improving your ROI\n\nWe've helped 500+ businesses increase their revenue by 300% on average!",
       followUp: [
@@ -181,7 +181,7 @@ const Chatbot: React.FC = () => {
       ],
     },
     {
-      question: "What makes Elevate360 different?",
+      question: "What makes Zentroverse different?",
       answer:
         "What sets us apart:\n\n🏆 **Proven Results** - 500+ successful projects, 95% client retention\n🎯 **Data-Driven Approach** - Every decision backed by analytics\n👥 **Dedicated Team** - Your own account manager\n🔄 **Transparent Process** - Know exactly what we're doing\n📊 **Regular Reporting** - Monthly performance updates\n🚀 **Innovation Focus** - Latest tools and techniques\n💡 **Strategic Thinking** - Not just tactics, but strategy\n\nWe don't just execute - we partner with you for long-term success!",
       followUp: [
@@ -358,7 +358,7 @@ const Chatbot: React.FC = () => {
     if (isGreeting(input)) {
       return {
         answer:
-          "Hello! 👋 Great to meet you! I'm here to help you discover how Elevate360 can transform your digital presence and grow your business.\n\nWhat would you like to know about?",
+          "Hello! 👋 Great to meet you! I'm here to help you discover how Zentroverse can transform your digital presence and grow your business.\n\nWhat would you like to know about?",
         followUp: mainMenuOptions,
       };
     }
@@ -476,11 +476,9 @@ const Chatbot: React.FC = () => {
         {/* Header */}
         <div className="chatbot-header">
           <div className="chatbot-header-info">
-            <div className="chatbot-avatar">
-              <span>360</span>
-            </div>
+            <div className="chatbot-avatar">{/* <span>360</span> */}</div>
             <div>
-              <h4>Elevate360 Assistant</h4>
+              <h4>Zentroverse Assistant</h4>
               <span className="status">Online</span>
             </div>
           </div>

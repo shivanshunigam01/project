@@ -31,7 +31,7 @@ const Header = () => {
     <header className="bg-white border-b shadow-sm fixed w-full z-50 top-0">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         <Link to="/">
-          <img src={Logo} alt="Logo" className="h-10" />
+          <img src={Logo} alt="Logo" className="h-[60px] w-auto" />
         </Link>
 
         {/* Desktop Menu */}
