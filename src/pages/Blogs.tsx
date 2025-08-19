@@ -44,6 +44,7 @@ const blogData = [
         <li><strong>Privacy-First Marketing:</strong> Cookie-less tracking and first-party data strategies are the new norm.</li>
       </ul>
       
+      
       <h3>What This Means for Your Business</h3>
       <p>Companies that adapt to these trends early will gain significant competitive advantages. The key is to start experimenting with these technologies now, rather than waiting for them to become mainstream.</p>
       
