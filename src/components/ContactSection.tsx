@@ -50,7 +50,7 @@ const ContactSection = () => {
 
   const sendOtp = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/otp/send-otp", {
+      const response = await fetch("http://34.70.38.87:5000/api/otp/send-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -77,7 +77,7 @@ const ContactSection = () => {
       return;
     }
     try {
-      const response = await fetch("http://localhost:5000/api/otp/verify-otp", {
+      const response = await fetch("http://34.70.38.87:5000/api/otp/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -116,7 +116,7 @@ const ContactSection = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/contact/create", {
+      const response = await fetch("http://34.70.38.87:5000/api/contact/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
