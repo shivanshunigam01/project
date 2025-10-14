@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Send, Mail, Phone, MapPin, CheckCircle, Home } from "lucide-react";
+import { Send, Mail, MapPin, CheckCircle, Home } from "lucide-react";
 import SVGSeparator from "./SVGSeparator";
 import toast from "react-hot-toast";
+import { sendOtp, verifyOtp, submitContactForm } from "../services/apiService";
 
 const ContactSection = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -10,19 +11,18 @@ const ContactSection = () => {
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [isOtpVerified, setIsOtpVerified] = useState(false);
   const [enteredOtp, setEnteredOtp] = useState("");
-  const [verifiedPhone, setVerifiedPhone] = useState(""); // ✅ store verified phone number
   const [isContactPage, setIsContactPage] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const [formData, setFormData] = useState({
     name: "",
-    phone: "",
     email: "",
+    phone: "",
     company: "",
     address: "",
     industry: "",
     message: "",
-    budget: "", // optional but added
+    budget: "",
   });
 
   useEffect(() => {
@@ -48,139 +48,96 @@ const ContactSection = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const sendOtp = async () => {
+  // ✅ Send OTP
+  const handleSendOtp = async () => {
+    if (!formData.name.trim() || !formData.email.trim()) {
+      toast.error("Please enter your name and email.");
+      return;
+    }
+    const id = toast.loading("Sending OTP...");
     try {
-      const response = await fetch("http://34.70.38.87:5000/api/otp/send-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: formData.name,
-          phone: formData.phone,
-        }),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        setIsOtpSent(true);
-        toast.success("OTP sent successfully");
-      } else {
-        toast.error(data.message || "Failed to send OTP");
-      }
-    } catch (error) {
-      toast.error("Something went wrong while sending OTP.");
+      await sendOtp(formData.name, formData.email);
+      setIsOtpSent(true);
+      toast.dismiss(id);
+      toast.success("OTP sent to your email. (Use 123456 for demo)");
+    } catch (error: any) {
+      toast.dismiss(id);
+      toast.error(error.message || "Failed to send OTP.");
     }
   };
 
-  const verifyOtp = async () => {
+  // ✅ Verify OTP
+  const handleVerifyOtp = async () => {
     if (!enteredOtp.trim()) {
-      toast.error("Please enter the OTP");
+      toast.error("Please enter the OTP.");
       return;
     }
+    const id = toast.loading("Verifying OTP...");
     try {
-      const response = await fetch("http://34.70.38.87:5000/api/otp/verify-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          phone: formData.phone,
-          otp: enteredOtp,
-        }),
-      });
-
-      const data = await response.json();
-      if (response.ok && data.message === "OTP verified successfully") {
+      const data = await verifyOtp(formData.email, enteredOtp);
+      toast.dismiss(id);
+      if (data.verified || data.message.includes("verified")) {
         toast.success("OTP Verified Successfully 🎉");
-
-        // ✅ store phone directly in formData
-        setFormData((prev) => ({
-          ...prev,
-          phone: prev.phone, // keep same phone but now considered verified
-        }));
-
         setIsOtpVerified(true);
         setStep(2);
-      } else {
-        toast.error(data.message || "Invalid OTP");
-      }
-    } catch (error) {
-      toast.error("Something went wrong. Try again.");
+      } else toast.error("Invalid OTP");
+    } catch (error: any) {
+      toast.dismiss(id);
+      toast.error(error.message || "Verification failed.");
     }
   };
 
+  // ✅ Submit Form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // ✅ Only block submission in step 1
-    if (step === 1 && (!isOtpVerified || !formData.phone)) {
-      toast.error("Please verify your phone number before proceeding.");
+    if (!isOtpVerified) {
+      toast.error("Please verify your email first.");
       return;
     }
 
+    const id = toast.loading("Submitting your request...");
     try {
-      const response = await fetch("http://34.70.38.87:5000/api/contact/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          message: formData.message,
-          budget: Number(formData.budget) || 0,
-          industry: formData.industry,
-          company: formData.company,
-          address: formData.address,
-        }),
-      });
+      await submitContactForm(formData);
+      toast.dismiss(id);
+      toast.success("Proposal request submitted successfully 🎯");
+      setIsSubmitted(true);
 
-      const data = await response.json();
-      if (response.ok) {
-        toast.success("Proposal request submitted successfully 🎯");
-        setIsSubmitted(true);
-        setTimeout(() => {
-          setIsSubmitted(false);
-          setFormData({
-            name: "",
-            phone: "",
-            email: "",
-            company: "",
-            address: "",
-            industry: "",
-            message: "",
-            budget: "",
-          });
-          setStep(1);
-          setIsOtpSent(false);
-          setIsOtpVerified(false);
-          setEnteredOtp("");
-        }, 3000);
-      } else {
-        toast.error(data.message || "Failed to submit proposal");
-      }
-    } catch (error) {
-      toast.error("Something went wrong while submitting.");
+      setTimeout(() => {
+        setIsSubmitted(false);
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          company: "",
+          address: "",
+          industry: "",
+          message: "",
+          budget: "",
+        });
+        setStep(1);
+        setIsOtpSent(false);
+        setIsOtpVerified(false);
+        setEnteredOtp("");
+      }, 2500);
+    } catch (error: any) {
+      toast.dismiss(id);
+      toast.error(error.message || "Submission failed.");
     }
   };
 
-  const handleBackToHome = () => {
-    window.location.href = "/";
-  };
+  const handleBackToHome = () => (window.location.href = "/");
 
   const contactInfo = [
     {
       icon: <Mail className="w-6 h-6" />,
       title: "Email Us",
-      content: "hello@Zentroverse.com",
-      link: "mailto:hello@Zentroverse.com",
-    },
-    {
-      icon: <Phone className="w-6 h-6" />,
-      title: "Call Us",
-      content: "+1 (555) 123-4567",
-      link: "tel:+15551234567",
+      content: "hello@zentroverse.com",
+      link: "mailto:hello@zentroverse.com",
     },
     {
       icon: <MapPin className="w-6 h-6" />,
       title: "Visit Us",
-      content: "123 Business Ave, Suite 100\nNew York, NY 10001",
+      content: "405, Block B, Shyamyash Enclave, Razabazar, Patna, 800014",
       link: "#",
     },
   ];
@@ -207,7 +164,6 @@ const ContactSection = () => {
                 : "opacity-0 translate-y-10"
             }`}
           >
-            {/* Back to Homepage Button - Only shown on /contact page */}
             {isContactPage && (
               <div className="mb-8">
                 <button
@@ -225,13 +181,13 @@ const ContactSection = () => {
                 Request a Free Proposal
               </h2>
               <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-                Ready to elevate your digital presence? Let's discuss your goals
-                and create a customized strategy that drives real results for
-                your business.
+                Ready to elevate your digital presence? Let’s discuss your goals
+                and create a customized strategy that drives real results.
               </p>
             </div>
 
             <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+              {/* LEFT FORM */}
               <div className="bg-white/5 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-white/10">
                 {isSubmitted ? (
                   <div className="text-center py-12">
@@ -240,8 +196,7 @@ const ContactSection = () => {
                       Thank You!
                     </h3>
                     <p className="text-gray-300">
-                      We've received your proposal request and will get back to
-                      you within 24 hours.
+                      We’ve received your request and will contact you soon.
                     </p>
                   </div>
                 ) : (
@@ -259,22 +214,23 @@ const ContactSection = () => {
                               value={formData.name}
                               onChange={handleInputChange}
                               required
-                              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
                               placeholder="Enter your full name"
                             />
                           </div>
+
                           <div>
                             <label className="block text-sm font-medium text-gray-200 mb-2">
-                              Phone Number *
+                              Email Address *
                             </label>
                             <input
-                              type="tel"
-                              name="phone"
-                              value={formData.phone}
+                              type="email"
+                              name="email"
+                              value={formData.email}
                               onChange={handleInputChange}
                               required
-                              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                              placeholder="Enter your phone number"
+                              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
+                              placeholder="Enter your email"
                             />
                           </div>
                         </div>
@@ -282,9 +238,8 @@ const ContactSection = () => {
                         {!isOtpSent ? (
                           <button
                             type="button"
-                            onClick={sendOtp}
-                            disabled={!formData.name || !formData.phone}
-                            className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg transition-colors duration-200"
+                            onClick={handleSendOtp}
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors duration-200 disabled:bg-gray-600 disabled:cursor-not-allowed"
                           >
                             Send OTP
                           </button>
@@ -299,13 +254,13 @@ const ContactSection = () => {
                                 value={enteredOtp}
                                 onChange={(e) => setEnteredOtp(e.target.value)}
                                 maxLength={6}
-                                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                                placeholder="Enter any OTP (demo)"
+                                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500"
+                                placeholder="Enter 123456 for demo"
                               />
                             </div>
                             <button
                               type="button"
-                              onClick={verifyOtp}
+                              onClick={handleVerifyOtp}
                               className="mt-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition-colors duration-200"
                             >
                               Verify OTP
@@ -314,9 +269,7 @@ const ContactSection = () => {
                         ) : (
                           <div className="flex items-center space-x-2 text-green-400">
                             <CheckCircle className="w-5 h-5" />
-                            <span>
-                              Phone number verified! Please continue below.
-                            </span>
+                            <span>Verified successfully!</span>
                           </div>
                         )}
                       </>
@@ -327,88 +280,25 @@ const ContactSection = () => {
                         <div className="grid md:grid-cols-2 gap-6">
                           <div>
                             <label className="block text-sm font-medium text-gray-200 mb-2">
-                              Email Address *
-                            </label>
-                            <input
-                              type="email"
-                              name="email"
-                              value={formData.email}
-                              onChange={handleInputChange}
-                              required
-                              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                              placeholder="Enter your email"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-200 mb-2">
-                              Select Industry
+                              Industry
                             </label>
                             <select
                               name="industry"
                               value={formData.industry}
                               onChange={handleInputChange}
                               required
-                              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none cursor-pointer"
-                              style={{
-                                backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
-                                backgroundPosition: "right 0.5rem center",
-                                backgroundRepeat: "no-repeat",
-                                backgroundSize: "1.5em 1.5em",
-                              }}
+                              className="w-full px-4 py-3 bg-gray-800 border border-white/20 rounded-lg text-white focus:ring-2 focus:ring-blue-500"
                             >
-                              <option
-                                value=""
-                                className="bg-gray-800 text-white"
-                              >
-                                Select Industry
-                              </option>
-                              <option
-                                value="Technology"
-                                className="bg-gray-800 text-white"
-                              >
-                                Technology
-                              </option>
-                              <option
-                                value="Healthcare"
-                                className="bg-gray-800 text-white"
-                              >
-                                Healthcare
-                              </option>
-                              <option
-                                value="E-commerce"
-                                className="bg-gray-800 text-white"
-                              >
-                                E-commerce
-                              </option>
-                              <option
-                                value="Finance"
-                                className="bg-gray-800 text-white"
-                              >
-                                Finance
-                              </option>
-                              <option
-                                value="Education"
-                                className="bg-gray-800 text-white"
-                              >
-                                Education
-                              </option>
-                              <option
-                                value="Real Estate"
-                                className="bg-gray-800 text-white"
-                              >
-                                Real Estate
-                              </option>
-                              <option
-                                value="Other"
-                                className="bg-gray-800 text-white"
-                              >
-                                Other
-                              </option>
+                              <option value="">Select Industry</option>
+                              <option value="Technology">Technology</option>
+                              <option value="Healthcare">Healthcare</option>
+                              <option value="E-commerce">E-commerce</option>
+                              <option value="Finance">Finance</option>
+                              <option value="Education">Education</option>
+                              <option value="Real Estate">Real Estate</option>
+                              <option value="Other">Other</option>
                             </select>
                           </div>
-                        </div>
-
-                        <div className="grid md:grid-cols-2 gap-6">
                           <div>
                             <label className="block text-sm font-medium text-gray-200 mb-2">
                               Company Name
@@ -418,36 +308,23 @@ const ContactSection = () => {
                               name="company"
                               value={formData.company}
                               onChange={handleInputChange}
-                              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:ring-2 focus:ring-blue-500"
                               placeholder="Enter company name"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-200 mb-2">
-                              Address
-                            </label>
-                            <input
-                              type="text"
-                              name="address"
-                              value={formData.address}
-                              onChange={handleInputChange}
-                              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                              placeholder="Enter your address"
                             />
                           </div>
                         </div>
 
                         <div>
                           <label className="block text-sm font-medium text-gray-200 mb-2">
-                            Tell us about your project
+                            Message / Project Details
                           </label>
                           <textarea
                             name="message"
                             value={formData.message}
                             onChange={handleInputChange}
                             rows={4}
-                            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            placeholder="Describe your project requirements..."
+                            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:ring-2 focus:ring-blue-500"
+                            placeholder="Describe your project..."
                           />
                         </div>
 
@@ -456,7 +333,7 @@ const ContactSection = () => {
                           className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-lg font-semibold flex items-center justify-center space-x-2 transition-all duration-200 transform hover:scale-105"
                         >
                           <Send className="w-5 h-5" />
-                          <span>Get a Proposal</span>
+                          <span>Submit Request</span>
                         </button>
                       </>
                     )}
@@ -464,6 +341,7 @@ const ContactSection = () => {
                 )}
               </div>
 
+              {/* RIGHT INFO CARD */}
               <div className="space-y-8">
                 <div className="bg-white/5 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-white/10">
                   <h3 className="text-2xl font-bold text-white mb-6">
@@ -488,38 +366,6 @@ const ContactSection = () => {
                         </div>
                       </div>
                     ))}
-                  </div>
-                </div>
-
-                <div className="bg-white/5 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-white/10">
-                  <h3 className="text-2xl font-bold text-white mb-6">
-                    Why Choose Zentroverse?
-                  </h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-3">
-                      <CheckCircle className="w-5 h-5 text-green-500" />
-                      <span className="text-gray-300">
-                        Free initial consultation
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <CheckCircle className="w-5 h-5 text-green-500" />
-                      <span className="text-gray-300">
-                        Customized strategy development
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <CheckCircle className="w-5 h-5 text-green-500" />
-                      <span className="text-gray-300">
-                        Transparent pricing & reporting
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <CheckCircle className="w-5 h-5 text-green-500" />
-                      <span className="text-gray-300">
-                        Dedicated account manager
-                      </span>
-                    </div>
                   </div>
                 </div>
               </div>
