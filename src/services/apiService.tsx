@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://34.70.38.87:5000/api";
+const API_BASE_URL = "https://api.zentroverse.com/api";
 
 export const sendOtp = async (name: string, email: string) => {
   const response = await fetch(`${API_BASE_URL}/otp/send-otp`, {
