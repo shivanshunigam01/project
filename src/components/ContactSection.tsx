@@ -1,3 +1,4 @@
+// components/ContactSection.tsx
 import React, { useEffect, useRef, useState } from "react";
 import { Send, Mail, MapPin, CheckCircle, Home } from "lucide-react";
 import SVGSeparator from "./SVGSeparator";
@@ -59,7 +60,7 @@ const ContactSection = () => {
       await sendOtp(formData.name, formData.email);
       setIsOtpSent(true);
       toast.dismiss(id);
-      toast.success("OTP sent to your email. (Use 123456 for demo)");
+      toast.success("OTP sent to your email."); // 🧹 Removed "(Use 123456 for demo)"
     } catch (error: any) {
       toast.dismiss(id);
       toast.error(error.message || "Failed to send OTP.");
@@ -235,6 +236,20 @@ const ContactSection = () => {
                           </div>
                         </div>
 
+                        <div>
+                          <label className="block text-sm font-medium text-gray-200 mb-2">
+                            Phone Number
+                          </label>
+                          <input
+                            type="text"
+                            name="phone"
+                            value={formData.phone}
+                            onChange={handleInputChange}
+                            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter your phone number"
+                          />
+                        </div>
+
                         {!isOtpSent ? (
                           <button
                             type="button"
@@ -255,7 +270,7 @@ const ContactSection = () => {
                                 onChange={(e) => setEnteredOtp(e.target.value)}
                                 maxLength={6}
                                 className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500"
-                                placeholder="Enter 123456 for demo"
+                                placeholder="Enter 6-digit OTP"
                               />
                             </div>
                             <button
@@ -275,6 +290,7 @@ const ContactSection = () => {
                       </>
                     )}
 
+                    {/* STEP 2 same as before */}
                     {step === 2 && (
                       <>
                         <div className="grid md:grid-cols-2 gap-6">
@@ -299,17 +315,18 @@ const ContactSection = () => {
                               <option value="Other">Other</option>
                             </select>
                           </div>
+
                           <div>
                             <label className="block text-sm font-medium text-gray-200 mb-2">
-                              Company Name
+                              Approximate Budget (₹)
                             </label>
                             <input
-                              type="text"
-                              name="company"
-                              value={formData.company}
+                              type="number"
+                              name="budget"
+                              value={formData.budget}
                               onChange={handleInputChange}
-                              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:ring-2 focus:ring-blue-500"
-                              placeholder="Enter company name"
+                              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
+                              placeholder="Enter your estimated budget"
                             />
                           </div>
                         </div>
@@ -341,7 +358,7 @@ const ContactSection = () => {
                 )}
               </div>
 
-              {/* RIGHT INFO CARD */}
+              {/* RIGHT INFO CARD same */}
               <div className="space-y-8">
                 <div className="bg-white/5 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-white/10">
                   <h3 className="text-2xl font-bold text-white mb-6">
