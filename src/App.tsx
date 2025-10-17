@@ -14,6 +14,7 @@ import IndustriesPage from "./pages/IndustriesPage";
 import BlogsPage from "./pages/Blogs";
 import Chatbot from "./components/Chatbot";
 import { Toaster } from "react-hot-toast";
+import LandingPage from "./components/LandingPage";
 
 function App() {
   return (
@@ -45,6 +46,9 @@ function App() {
         <Route path="/industries" element={<IndustriesPage />} />
         <Route path="/blog" element={<BlogsPage />} />
         <Route path="/contact" element={<ContactSection />} />
+              {/* 🔹 New Landing Page Route for Lead Generation */}
+        <Route path="/landing" element={<LandingPage />} />
+        
       </Routes>
     </div>
   );
