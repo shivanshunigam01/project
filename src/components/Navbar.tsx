@@ -29,9 +29,19 @@ const Header = () => {
 
   return (
     <header className="bg-white border-b shadow-sm fixed w-full z-50 top-0">
+      {/* keep overall height same; slightly tighter vertical padding for balance */}
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-        <Link to="/">
-          <img src={Logo} alt="Logo" className="h-[60px] w-auto" />
+        {/* Inline logo: visually larger but does NOT increase navbar height */}
+        <Link to="/" className="flex items-center">
+          {/* Fixed-size box = same navbar height; overflow hidden clips the larger image */}
+          <div className="relative h-15 md:h-14 w-[170px] md:w-[210px] overflow-hidden flex-shrink-0">
+            <img
+              src={Logo}
+              alt="Zentroverse"
+              className="absolute left-0 top-1/2 -translate-y-1/2 h-[170%] md:h-[185%] w-auto select-none"
+              style={{ imageRendering: "auto" }}
+            />
+          </div>
         </Link>
 
         {/* Desktop Menu */}
@@ -42,7 +52,7 @@ const Header = () => {
               <button
                 key={item.name}
                 onClick={() => scrollToSection(item.href)}
-                className="text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200"
+                className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
               >
                 {item.name}
               </button>
@@ -50,7 +60,7 @@ const Header = () => {
               <Link
                 key={item.name}
                 to={item.href}
-                className="text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200"
+                className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
               >
                 {item.name}
               </Link>
@@ -75,7 +85,7 @@ const Header = () => {
               <button
                 key={item.name}
                 onClick={() => scrollToSection(item.href)}
-                className="block w-full text-left py-2 text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200"
+                className="block w-full text-left py-2 text-gray-700 hover:text-blue-600 font-medium"
               >
                 {item.name}
               </button>
@@ -84,7 +94,7 @@ const Header = () => {
                 key={item.name}
                 to={item.href}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full text-left py-2 text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200"
+                className="block w-full text-left py-2 text-gray-700 hover:text-blue-600 font-medium"
               >
                 {item.name}
               </Link>
