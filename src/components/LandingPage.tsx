@@ -194,6 +194,7 @@ const LandingPage: React.FC = () => {
     expectedMonth: "",
     message: "",
     agree: false,
+    otherModel: "", // << NEW
   });
 
   useEffect(() => {
@@ -303,8 +304,15 @@ const LandingPage: React.FC = () => {
     if (form.pincode && !validPincode(form.pincode))
       return toast.error("कृपया 6 अंकों का पिनकोड दर्ज करें.");
 
+    // merge selected + other (if typed)
+    const vehicleModelsCombined = [
+      ...form.vehicleModels,
+      ...(form.otherModel.trim() ? [form.otherModel.trim()] : []),
+    ];
+
     const payload = {
       ...form,
+      vehicleModels: vehicleModelsCombined, // override with combined list
       ctaSource: ctaSource || "Direct Submit",
       submittedAt: new Date().toISOString(),
     };
@@ -338,6 +346,7 @@ const LandingPage: React.FC = () => {
       expectedMonth: "",
       message: "",
       agree: false,
+      otherModel: "", // reset
     });
     setCtaSource("");
   };
@@ -703,6 +712,28 @@ const LandingPage: React.FC = () => {
                   <div className="text-sm text-white/60">No models found.</div>
                 )}
             </div>
+            {/* Other model (optional) */}
+            <div className="rounded-xl border border-white/10 overflow-hidden">
+              <div className="w-full px-4 py-3 bg-white/[0.04]">
+                <label className="text-sm font-semibold">
+                  Other model (optional)
+                </label>
+              </div>
+              <div className="p-3">
+                <input
+                  name="otherModel"
+                  value={form.otherModel}
+                  onChange={handleChange}
+                  placeholder="Type the model / variant name (e.g., Ultra T.19 LA 24ft)"
+                  className="w-full p-3 rounded-lg bg-black/60 border border-white/10 text-white outline-none focus:ring-2"
+                  style={{ outlineColor: TOKENS.ring }}
+                />
+                <p className="mt-2 text-xs text-white/60">
+                  If filled, this will be submitted along with any selected
+                  models.
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* Month picker */}
@@ -770,7 +801,7 @@ const LandingPage: React.FC = () => {
             className="md:col-span-2 text-white py-3 rounded-lg font-semibold transition-all duration-200 hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-offset-2"
             style={{ background: TOKENS.gradMain }}
           >
-            Submit 
+            Submit
           </button>
         </form>
 
