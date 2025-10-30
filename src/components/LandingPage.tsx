@@ -1,10 +1,16 @@
 "use client";
 
+declare global {
+  interface Window {
+    fbq?: (...args: any[]) => void;
+  }
+}
+
 import React, { useEffect, useMemo, useState, useId } from "react";
 import toast from "react-hot-toast";
 import { Country, State, City, IState, ICity } from "country-state-city";
 import Logo from "../assets/logo_1.png";
-
+import Script from "next/script";
 const TOKENS = {
   bg: "#0a0a0e",
   bg2: "#13121a",
@@ -329,6 +335,10 @@ const LandingPage: React.FC = () => {
       );
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       toast.success("✅ Lead submitted!");
+      window.fbq?.("track", "Lead", {
+        content_name: "Festive Test Drive",
+        cta_source: payload.ctaSource,
+      });
     } catch (err) {
       console.error("Lead submit error:", err);
       toast.error("Could not submit lead right now.");
@@ -428,6 +438,31 @@ const LandingPage: React.FC = () => {
 
       {/* HEADER */}
       <header className="sticky top-0 z-40 bg-black/70 backdrop-blur-lg border-b border-white/10">
+        <>
+          <Script id="meta-pixel" strategy="afterInteractive">
+            {`
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '2622116344790469');
+      fbq('track', 'PageView');
+    `}
+          </Script>
+
+          {/* NoScript fallback */}
+          <noscript
+            dangerouslySetInnerHTML={{
+              __html:
+                '<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=2622116344790469&ev=PageView&noscript=1" />',
+            }}
+          />
+        </>
+
         <div className="max-w-7xl mx-auto px-4 py-3 md:py-4 flex items-center justify-between">
           <div className="relative flex items-center gap-3">
             <img
