@@ -6,11 +6,12 @@ declare global {
   }
 }
 
-import React, { useEffect, useMemo, useState, useId } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { Country, State, City, IState, ICity } from "country-state-city";
 import Logo from "../assets/logo_1.png";
 import Script from "next/script";
+
 const TOKENS = {
   bg: "#0a0a0e",
   bg2: "#13121a",
@@ -20,140 +21,7 @@ const TOKENS = {
   ring: "#fb923c",
 };
 
-const Diya: React.FC = () => {
-  const uid = useId();
-  return (
-    <svg viewBox="0 0 200 140" className="w-9 h-9 md:w-11 md:h-11" aria-hidden>
-      <defs>
-        <linearGradient id={`flame-${uid}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#FFD54F" />
-          <stop offset="100%" stopColor="#FF6F00" />
-        </linearGradient>
-        <linearGradient id={`bowl-${uid}`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#4E342E" />
-          <stop offset="100%" stopColor="#8D6E63" />
-        </linearGradient>
-      </defs>
-      <ellipse cx="100" cy="110" rx="80" ry="18" fill="#000" opacity="0.08" />
-      <path
-        d="M20 90 C 50 130, 150 130, 180 90 C 160 70, 40 70, 20 90 Z"
-        fill={`url(#bowl-${uid})`}
-      />
-      <circle cx="100" cy="78" r="8" fill="#FFA000" opacity="0.4" />
-      <path
-        d="M100 30 C 80 55, 92 72, 100 80 C 108 72, 120 55, 100 30 Z"
-        fill={`url(#flame-${uid})`}
-      >
-        <animate
-          attributeName="opacity"
-          values="1;0.85;1"
-          dur="2s"
-          repeatCount="indefinite"
-        />
-      </path>
-      <circle cx="100" cy="40" r="6" fill="#FFF176" opacity="0.7">
-        <animate
-          attributeName="r"
-          values="5;7;5"
-          dur="2.2s"
-          repeatCount="indefinite"
-        />
-      </circle>
-    </svg>
-  );
-};
-
-const ChhathSun: React.FC = () => {
-  const uid = useId();
-  return (
-    <svg
-      viewBox="0 0 300 160"
-      className="w-14 h-14 md:w-16 md:h-16"
-      aria-hidden
-    >
-      <defs>
-        <linearGradient id={`sun-${uid}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#FFB300" />
-          <stop offset="100%" stopColor="#FF6A00" />
-        </linearGradient>
-      </defs>
-      <circle cx="150" cy="60" r="26" fill={`url(#sun-${uid})`}>
-        <animate
-          attributeName="r"
-          values="26;30;26"
-          dur="2.6s"
-          repeatCount="indefinite"
-        />
-      </circle>
-      {[...Array(8)].map((_, i) => (
-        <line
-          key={i}
-          x1="150"
-          y1="18"
-          x2="150"
-          y2="5"
-          stroke="#FFB300"
-          strokeWidth="2.5"
-          transform={`rotate(${i * 45} 150 60)`}
-          opacity="0.7"
-        >
-          <animate
-            attributeName="strokeWidth"
-            values="2.5;3.5;2.5"
-            dur="2s"
-            begin={`${i * 0.2}s`}
-            repeatCount="indefinite"
-          />
-        </line>
-      ))}
-    </svg>
-  );
-};
-
-const Fx: React.FC = () => (
-  <>
-    <style>{`
-      .grain:before{
-        content:"";
-        position:fixed;inset:0;pointer-events:none;opacity:.08;
-        background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.25"/></svg>');
-        mix-blend-mode:soft-light;z-index:30
-      }
-      @media (prefers-reduced-motion: no-preference){
-        .spark{position:absolute;width:6px;height:6px;border-radius:9999px;background:#fff2;filter:blur(.6px);top:-10vh}
-        .spark:nth-child(1){left:8%;animation:float 16s linear infinite;}
-        .spark:nth-child(2){left:22%;animation:float 18s linear infinite 1s;}
-        .spark:nth-child(3){left:38%;animation:float 14s linear infinite 2s;}
-        .spark:nth-child(4){left:54%;animation:float 20s linear infinite 1.4s;}
-        .spark:nth-child(5){left:71%;animation:float 17s linear infinite .6s;}
-        .spark:nth-child(6){left:86%;animation:float 22s linear infinite 1.2s;}
-        @keyframes float{
-          0%{transform:translateY(0) scale(.7);opacity:0}
-          10%{opacity:.28}
-          60%{opacity:.18}
-          100%{transform:translateY(120vh) scale(1);opacity:0}
-        }
-      }
-      .aurora{position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));}
-      .aurora:before{
-        content:"";position:absolute;inset:-40%;
-        background:
-          radial-gradient(60% 50% at 20% 20%, rgba(251,146,60,.25), transparent 60%),
-          radial-gradient(55% 45% at 80% 20%, rgba(59,130,246,.28), transparent 60%),
-          radial-gradient(50% 45% at 50% 90%, rgba(34,197,94,.22), transparent 60%);
-        filter: blur(30px);
-        animation: drift 12s linear infinite;
-      }
-      @keyframes drift { 0% { transform: translate3d(0,0,0) rotate(0deg); } 50% { transform: translate3d(-6%, 2%, 0) rotate(8deg);} 100% { transform: translate3d(0,0,0) rotate(0deg);} }
-    `}</style>
-    <span className="spark" />
-    <span className="spark" />
-    <span className="spark" />
-    <span className="spark" />
-    <span className="spark" />
-    <span className="spark" />
-  </>
-);
+// NOTE: Removed Diya/Chhath decorative components & usage
 
 type Product = {
   id?: string | number;
@@ -169,6 +37,14 @@ const getProductName = (p: Product) =>
   p.model ||
   p.productName ||
   (p.id ? `Model #${p.id}` : "Unknown");
+
+// --- Small helpers for month formatting ---
+const pad2 = (n: number) => String(n).padStart(2, "0");
+const ymToLabel = (ym: string) => {
+  if (!/^\d{4}-\d{2}$/.test(ym)) return "";
+  const [y, m] = ym.split("-").map(Number);
+  return `${new Date(0, m - 1).toLocaleString("en", { month: "long" })} ${y}`;
+};
 
 const LandingPage: React.FC = () => {
   const [ctaSource, setCtaSource] = useState<string>("");
@@ -200,8 +76,13 @@ const LandingPage: React.FC = () => {
     expectedMonth: "",
     message: "",
     agree: false,
-    otherModel: "", // << NEW
+    otherModel: "",
   });
+
+  // month popover fallback
+  const monthInputRef = useRef<HTMLInputElement | null>(null);
+  const [monthPopoverOpen, setMonthPopoverOpen] = useState(false);
+  const [monthYear, setMonthYear] = useState<number>(new Date().getFullYear());
 
   useEffect(() => {
     let alive = true;
@@ -290,12 +171,6 @@ const LandingPage: React.FC = () => {
     });
   };
 
-  const openMonthPicker = (
-    e: React.FocusEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement>
-  ) => {
-    (e.currentTarget as any).showPicker?.();
-  };
-
   const validPhone = (v: string) => /^[6-9]\d{9}$/.test(v.trim());
   const validEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
   const validPincode = (v: string) => /^\d{6}$/.test(v.trim());
@@ -310,7 +185,6 @@ const LandingPage: React.FC = () => {
     if (form.pincode && !validPincode(form.pincode))
       return toast.error("कृपया 6 अंकों का पिनकोड दर्ज करें.");
 
-    // merge selected + other (if typed)
     const vehicleModelsCombined = [
       ...form.vehicleModels,
       ...(form.otherModel.trim() ? [form.otherModel.trim()] : []),
@@ -318,7 +192,7 @@ const LandingPage: React.FC = () => {
 
     const payload = {
       ...form,
-      vehicleModels: vehicleModelsCombined, // override with combined list
+      vehicleModels: vehicleModelsCombined,
       ctaSource: ctaSource || "Direct Submit",
       submittedAt: new Date().toISOString(),
     };
@@ -334,9 +208,9 @@ const LandingPage: React.FC = () => {
         }
       );
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      toast.success("✅ Lead submitted!");
+      toast.success(" Lead submitted!");
       window.fbq?.("track", "Lead", {
-        content_name: "Festive Test Drive",
+        content_name: "Special Test Drive",
         cta_source: payload.ctaSource,
       });
     } catch (err) {
@@ -356,7 +230,7 @@ const LandingPage: React.FC = () => {
       expectedMonth: "",
       message: "",
       agree: false,
-      otherModel: "", // reset
+      otherModel: "",
     });
     setCtaSource("");
   };
@@ -430,13 +304,8 @@ const LandingPage: React.FC = () => {
   };
 
   return (
-    <div
-      className="min-h-screen text-white grain"
-      style={{ background: TOKENS.bg }}
-    >
-      <Fx />
-
-      {/* HEADER */}
+    <div className="min-h-screen text-white" style={{ background: TOKENS.bg }}>
+      {/* HEADER (Diwali icons removed) */}
       <header className="sticky top-0 z-40 bg-black/70 backdrop-blur-lg border-b border-white/10">
         <>
           <Script id="meta-pixel" strategy="afterInteractive">
@@ -454,7 +323,6 @@ const LandingPage: React.FC = () => {
     `}
           </Script>
 
-          {/* NoScript fallback */}
           <noscript
             dangerouslySetInnerHTML={{
               __html:
@@ -470,13 +338,7 @@ const LandingPage: React.FC = () => {
               alt="Zentroverse"
               className="h-16 md:h-20 w-auto select-none"
             />
-            <span className="absolute -right-5 -bottom-2 hidden md:block">
-              <Diya />
-            </span>
-            <span className="absolute -left-7 -bottom-2 hidden lg:block">
-              <ChhathSun />
-            </span>
-            <span className="sr-only">Zentroverse – Festive Campaign</span>
+            <span className="sr-only">Zentroverse – Special Test Drive</span>
           </div>
 
           <a
@@ -493,7 +355,7 @@ const LandingPage: React.FC = () => {
         </div>
       </header>
 
-      {/* HERO */}
+      {/* HERO (unchanged copy) */}
       <section className="relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute -top-24 -left-16 w-[440px] h-[440px] rounded-full blur-3xl bg-[#FFB300] opacity-20" />
@@ -507,17 +369,15 @@ const LandingPage: React.FC = () => {
               className="inline-flex items-center gap-2 text-white px-3 py-1 rounded-full text-xs md:text-sm font-semibold"
               style={{ background: TOKENS.gradMain }}
             >
-              🪔 Diwali & 🌅 Chhath • Special Test Drive Window
+              ⭐ Special Test Drive Window • Limited Slots
             </span>
             <h1 className="text-3xl md:text-5xl font-extrabold leading-tight">
-              प्रकाश का पर्व, <span className="text-[#F59E0B]">बड़ा लाभ</span> —
-              Book your Tata CV{" "}
+              Bigger savings, smarter fleets — Book your Tata CV{" "}
               <span className="text-[#F97316]">Test Drive</span> today!
             </h1>
             <p className="max-w-xl" style={{ color: TOKENS.textDim }}>
               Intra, Ace, Yodha, LPT — personalized demo at your location.
-              Faster finance & delivery support during{" "}
-              <strong>Diwali & Chhath Puja 2025</strong>.
+              Priority finance & delivery support during the campaign window.
             </p>
             <div className="flex items-center gap-3">
               <a
@@ -553,13 +413,15 @@ const LandingPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Aurora card */}
+          {/* KPI card */}
           <div className="relative">
             <div
-              className="aurora rounded-2xl border border-white/10 p-6 md:p-8"
+              className="rounded-2xl border border-white/10 p-6 md:p-8"
               style={{
                 boxShadow:
                   "0 0 0 1px rgba(255,255,255,.04), 0 24px 60px -20px rgba(0,0,0,.6), inset 0 0 80px rgba(255,255,255,.04)",
+                background:
+                  "linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02))",
               }}
             >
               <div className="grid grid-cols-3 gap-4">
@@ -606,18 +468,18 @@ const LandingPage: React.FC = () => {
       >
         <div className="max-w-4xl mx-auto text-center mb-10">
           <h2 className="text-3xl md:text-4xl font-bold mb-3">
-            Book Your Festive Test Drive
+            Book Your Test Drive
           </h2>
           <p className="text-sm md:text-base" style={{ color: TOKENS.textDim }}>
             Experience Tata’s trusted commercial vehicles with a personalized
-            demo during the Diwali & Chhath 2025 window.
+            demo during our special campaign window.
           </p>
         </div>
 
         <form
           onSubmit={handleSubmit}
           className="max-w-4xl mx-auto bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 md:p-8 grid md:grid-cols-2 gap-5"
-          aria-label="Festive Test Drive Lead Form"
+          aria-label="Special Test Drive Lead Form"
         >
           <input
             type="hidden"
@@ -747,6 +609,7 @@ const LandingPage: React.FC = () => {
                   <div className="text-sm text-white/60">No models found.</div>
                 )}
             </div>
+
             {/* Other model (optional) */}
             <div className="rounded-xl border border-white/10 overflow-hidden">
               <div className="w-full px-4 py-3 bg-white/[0.04]">
@@ -771,25 +634,99 @@ const LandingPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Month picker */}
-          <label className="flex flex-col gap-1">
-            <span className="text-xs text-white/70">
-              Expected Month of Purchase
-            </span>
-            <input
-              name="expectedMonth"
-              type="month"
-              value={form.expectedMonth}
-              onChange={handleChange}
-              onFocus={openMonthPicker}
-              onClick={openMonthPicker}
-              inputMode="numeric"
-              pattern="\d{4}-\d{2}"
-              className="p-3 rounded-lg bg-black/60 border border-white/10 text-white"
-              placeholder="YYYY-MM"
-              aria-label="Expected Month of Purchase"
-            />
-          </label>
+          {/* EXPECTED MONTH with calendar trigger & popover fallback */}
+          <div className="relative">
+            <label className="flex flex-col gap-1">
+              <span className="text-xs text-white/70">
+                Expected Month of Purchase
+              </span>
+              <div className="flex items-center gap-2">
+                <input
+                  ref={monthInputRef}
+                  name="expectedMonth"
+                  type="month"
+                  value={form.expectedMonth}
+                  onChange={handleChange}
+                  className="flex-1 p-3 rounded-lg bg-black/60 border border-white/10 text-white"
+                  placeholder="YYYY-MM"
+                  aria-label="Expected Month of Purchase"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    const opened = monthInputRef.current?.showPicker?.();
+                    if (opened === undefined) setMonthPopoverOpen(true); // fallback
+                  }}
+                  className="p-3 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10"
+                  aria-label="Open month picker"
+                  title={
+                    form.expectedMonth
+                      ? ymToLabel(form.expectedMonth)
+                      : "Select month"
+                  }
+                >
+                  {/* calendar icon */}
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v3H3V6a2 2 0 0 1 2-2h1V3a1 1 0 0 1 1-1zM3 10h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-8zm4 3v2h2v-2H7zm4 0v2h2v-2h-2zm4 0v2h2v-2h-2z" />
+                  </svg>
+                </button>
+              </div>
+              <span className="text-[11px] text-white/50">
+                {form.expectedMonth
+                  ? ymToLabel(form.expectedMonth)
+                  : "Pick month & year (optional)"}
+              </span>
+            </label>
+
+            {/* Fallback month grid */}
+            {monthPopoverOpen && (
+              <div
+                className="absolute z-50 mt-2 w-72 rounded-xl border border-white/10 bg-[#111] p-3 shadow-xl"
+                onMouseLeave={() => setMonthPopoverOpen(false)}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <button
+                    type="button"
+                    className="px-2 py-1 rounded border border-white/10"
+                    onClick={() => setMonthYear((y) => y - 1)}
+                  >
+                    ‹
+                  </button>
+                  <div className="text-sm font-semibold">{monthYear}</div>
+                  <button
+                    type="button"
+                    className="px-2 py-1 rounded border border-white/10"
+                    onClick={() => setMonthYear((y) => y + 1)}
+                  >
+                    ›
+                  </button>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
+                    <button
+                      key={m}
+                      type="button"
+                      className="text-sm bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg px-3 py-2"
+                      onClick={() => {
+                        const ym = `${monthYear}-${pad2(m)}`;
+                        setForm((f) => ({ ...f, expectedMonth: ym }));
+                        setMonthPopoverOpen(false);
+                      }}
+                    >
+                      {new Date(0, m - 1).toLocaleString("en", {
+                        month: "short",
+                      })}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
 
           <select
             name="source"
@@ -826,8 +763,8 @@ const LandingPage: React.FC = () => {
               aria-label="Consent"
             />
             <span>
-              I agree to be contacted during the Diwali & Chhath 2025 festive
-              period and consent to my data being used to schedule a demo.
+              I agree to be contacted and consent to my data being used to
+              schedule a demo.
             </span>
           </label>
 
@@ -841,8 +778,8 @@ const LandingPage: React.FC = () => {
         </form>
 
         <p className="max-w-4xl mx-auto mt-4 text-center text-xs text-white/55">
-          *By submitting, you agree to be contacted during the Diwali & Chhath
-          2025 festive period.
+          *By submitting, you agree to be contacted regarding this special test
+          drive window.
         </p>
       </section>
 
@@ -850,8 +787,8 @@ const LandingPage: React.FC = () => {
         className="py-6 text-center text-white/60 border-t border-white/10"
         style={{ background: TOKENS.bg }}
       >
-        © {new Date().getFullYear()} Zentroverse Global Pvt. Ltd. • Diwali &
-        Chhath Festive Campaign • Vikramshila Automobiles
+        Sponsored by Tata Motors CV Dealers • © {new Date().getFullYear()}{" "}
+        Zentroverse Global Pvt. Ltd.
       </footer>
     </div>
   );
